@@ -1,6 +1,7 @@
 import java.awt.Image;
+import java.io.Serializable;
 
-public class Ability extends ItemSpecial
+public class Ability extends ItemSpecial implements Serializable
     {
         private boolean active;
         private boolean offCooldown;

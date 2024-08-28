@@ -181,6 +181,16 @@ public class Shop implements ActionListener
             return abilities;
         }
 
+        public void setAbilities(Item[][] abils)
+        {
+            abilities = abils;
+        }
+
+        public void setSkins(Item[][] skis)
+        {
+            skins = skis;
+        }
+
         public Item[][] getSkins()
         {
             return skins;

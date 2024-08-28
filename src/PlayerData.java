@@ -1,8 +1,13 @@
-public class PlayerData {
+import java.io.Serializable;
+
+public class PlayerData implements Serializable
+{
     private int creds, highScore;
-    private Item[][] abilitiesUnlocked;
-    private Item[][] skinsUnlocked;
+    private int[][] abilitiesUnlocked;
+    private int[][] skinsUnlocked;
     private int abilEquippedX, abilEquippedY; 
+
+    private static final long serialVersionUID = 1L;
 
     public PlayerData(int storeLengthX, int storeLengthY)
     {
@@ -10,8 +15,8 @@ public class PlayerData {
         abilEquippedX = 0;
         creds = 0;
         highScore = 0;
-        abilitiesUnlocked = new Item[storeLengthX][storeLengthY];
-        skinsUnlocked = new Item[storeLengthX][storeLengthY];
+        abilitiesUnlocked = new int[storeLengthX][storeLengthY];
+        skinsUnlocked = new int[storeLengthX][storeLengthY];
     }
 
     public int getCreds()
@@ -64,15 +69,27 @@ public class PlayerData {
         this.abilEquippedY = abilEquippedY;
     }
 
-    public Item[][] getAbilitiesUnlocked()
+    public int[][] getAbilitiesUnlocked()
     {
         return abilitiesUnlocked;
     }
 
-    public Item[][] getSkinsUnlocked()
+    public int[][] getSkinsUnlocked()
     {
         return skinsUnlocked;
     }
+
+    public void setAbilitiesUnlocked(int[][] aU)
+    {
+        abilitiesUnlocked = aU;
+    }
+
+    public void setSkinsUnlocked(int[][] sU)
+    {
+        skinsUnlocked = sU;
+    }
+
+
 
 
 

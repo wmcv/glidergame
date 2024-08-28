@@ -243,6 +243,12 @@ public class ParachuteSlider extends JPanel //implements ActionListener, KeyList
     ArrayList<Ball> tempBarrage;
      AppListener appListener;
     
+
+     //save and load buttons
+     JButton saveGame;
+     JButton loadGame;
+     String filename = "Testing12";
+
     
     //vscode audio is broken :(
 
@@ -562,6 +568,20 @@ public class ParachuteSlider extends JPanel //implements ActionListener, KeyList
         add(shopOpenBtn);
 
 
+        //saveGame
+        saveGame = new JButton("Save Game");
+        saveGame.addActionListener(new AppListener(this, this));   //110
+        saveGame.setBounds(boardWidth - 110, boardHeight - 35, 100, 35);
+        saveGame.setFocusable(false);
+        add(saveGame);
+
+        //loadGame
+        loadGame = new JButton("Load Game");
+        loadGame.addActionListener(new AppListener(this, this));   //110
+        loadGame.setBounds(boardWidth - 110, boardHeight - 70, 100, 35);
+        loadGame.setFocusable(false);
+        add(loadGame);
+
 
 
         //shop close button
@@ -769,9 +789,6 @@ public class ParachuteSlider extends JPanel //implements ActionListener, KeyList
 
 
 
-
-
-        PD.addCreds(10000);
         for (int i = 1; i <= 3; i++)
         {
             Heart heart = new Heart(heartImg, boardWidth-(heartWidth*(i-1) + (heartWidth/4)*i) -35, 8, heartWidth, heartHeight);

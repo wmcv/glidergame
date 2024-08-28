@@ -1,6 +1,7 @@
 import java.awt.Image;
+import java.io.Serializable;
 
-public class Skin extends ItemSpecial
+public class Skin extends ItemSpecial implements Serializable
     {
         private String skinType;
         private Image imgL;

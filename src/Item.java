@@ -1,9 +1,10 @@
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import javax.swing.JPanel;
 
-public class Item implements ActionListener
+public class Item implements ActionListener, Serializable
     {
         //itemX and itemY are the coords to its place in the 2d array
         private int itemX;

@@ -2,11 +2,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
-public class ItemBtn implements ActionListener
+public class ItemBtn implements ActionListener, Serializable
     {
         private int x;
         private int y;
@@ -74,11 +75,11 @@ public class ItemBtn implements ActionListener
                 owned = true;
                 if (item.getSpecialItem().getType() == 0)
                 {
-                    PD.getAbilitiesUnlocked()[item.getItemX()][item.getItemY()] = item;
+                    PD.getAbilitiesUnlocked()[item.getItemX()][item.getItemY()] = 1;
                 }
                 else
                 {
-                    PD.getSkinsUnlocked()[item.getItemX()][item.getItemY()] = item;
+                    PD.getSkinsUnlocked()[item.getItemX()][item.getItemY()] = 1;
                 }
             }
             else

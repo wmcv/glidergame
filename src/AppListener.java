@@ -195,6 +195,8 @@ public class AppListener implements ActionListener, KeyListener {
         
         if (e.getSource() == shopCloseBtn)
         {   
+            paraSlider.loadGame.setVisible(true);
+            paraSlider.saveGame.setVisible(true);
             paraSlider.shopBounce = 0;
             paraSlider.loadingScreen = true;
             paraSlider.playBtn.setVisible(true);
@@ -236,8 +238,57 @@ public class AppListener implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) 
     {
+        if (e.getSource() == paraSlider.loadGame)
+        {
+            PlayerData PD = LoadPlayerData.loadPlayerData(paraSlide.filename);
+            if (PD != null)
+            {
+                paraSlide.PD.setCreds(PD.getCreds());
+                paraSlide.PD.setHighScore(PD.getHighScore());
+                paraSlide.PD.setAbilitiesUnlocked(PD.getAbilitiesUnlocked());
+                paraSlide.PD.setSkinsUnlocked(PD.getSkinsUnlocked());
+            }
+
+            for (int i = 1 ; i < paraSlide.storeLengthX; i++)
+            {
+                for (int j = 0; j < paraSlide.storeLengthY; j++)
+                {
+                    int item = paraSlide.PD.getSkinsUnlocked()[i][j];
+                    if (item != 0)
+                    {
+                    ItemBtn btnItemm = paraSlide.shop.getSkins()[i][j].getBtnItem();
+                    btnItemm.setOwned(true);
+                    btnItemm.getItemBtn().setText("Equip");
+                    }
+                }
+            }
+
+            for (int i = 1 ; i < paraSlide.storeLengthX; i++)
+            {
+                for (int j = 0; j < paraSlide.storeLengthY; j++)
+                {
+                    int item = paraSlide.PD.getAbilitiesUnlocked()[i][j];
+                    if (item != 0)
+                    {
+                    ItemBtn btnItemm = paraSlide.shop.getAbilities()[i][j].getBtnItem();
+                    btnItemm.setOwned(true);
+                    btnItemm.getItemBtn().setText("Equip");
+                    }
+                }
+            }
+        }
+
+        if (e.getSource() == paraSlider.saveGame)
+        {
+            SavePlayerData.savePlayerData(paraSlide.PD, paraSlide.filename);
+        }
+
+
+
         if (e.getSource() == paraSlider.playBtn)
         {
+            paraSlider.loadGame.setVisible(false);
+            paraSlider.saveGame.setVisible(false);
             paraSlider.credits.setVisible(false);
             paraSlider.highestScore.setVisible(false);
             paraSlider.loadingScreen = false;
@@ -276,6 +327,8 @@ public class AppListener implements ActionListener, KeyListener {
 
         if (e.getSource() == paraSlider.shopOpenBtn)
         {
+            paraSlider.loadGame.setVisible(false);
+            paraSlider.saveGame.setVisible(false);
             paraSlider.loadingScreen = false;
             paraSlider.playBtn.setVisible(false);
             paraSlider.shopOpenBtn.setVisible(false);
@@ -286,6 +339,8 @@ public class AppListener implements ActionListener, KeyListener {
 
         if (e.getSource() == paraSlider.returnHomeBtn)
         {
+            paraSlider.loadGame.setVisible(true);
+            paraSlider.saveGame.setVisible(true);
             paraSlider.credits.setVisible(true);
             paraSlider.highestScore.setVisible(true);
             paraSlider.start = false;

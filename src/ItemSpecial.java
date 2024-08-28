@@ -1,4 +1,6 @@
-public class ItemSpecial
+import java.io.Serializable;
+
+public class ItemSpecial implements Serializable
     {
 
         private int type;
