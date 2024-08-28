@@ -5,20 +5,36 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import javax.swing.*;
 
-public class ParachuteSlider extends JPanel implements ActionListener, KeyListener
+public class ParachuteSlider extends JPanel //implements ActionListener, KeyListener
 {
 
-    //add ammo limit?
-    //add buttons for "play" "play again" "how to play" maybe others
+
+
+    //three tiers for abilties 
+    //none, heal 1, heal 2
+    //shield, forcefield, hex dome
+    //points x 1.5, points x 2, points x 2.5
     
+    //for immunity, just have a boolean called immunity = true and have it so health can't go down
+
+
+
+
+    //3 create the abilities and skins
+    //make apperance more pleasing for example clouds as the boarders on the left and right
+    //the clouds could even cross and cover the whole screen from the left and right when you hit play and then reveal ---
+    //--- the sky and the transport plane????
+    //make how to play
+    //make video on game
+    //commit all to github
+    //project done?
+
     int boardWidth = 640;
     int boardHeight = 480;
     Random rand = new Random();
@@ -81,7 +97,7 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
     int explosiveHeight = 140;
     int maxExplosionHeight = boardHeight;
     int minExplosionHeight = 30;
-    int chanceExplosion = 20; //out of 1000 per tick;
+    //int chanceExplosion = 20; //out of 1000 per tick;
     int explosionLifeTime = 20;
     //1900
     int missileDelay = 1900;
@@ -119,351 +135,45 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
 
 
     //store
-    int storeX = 600;
+    int storeX = 700;
     int storeY = 0;
-    int storeWidth = 300;
-    int storeHeight = 400;
+    int storeWidth = boardWidth/2 + 60;
+    int storeHeight = boardHeight;
     int storeLengthX = 3;
-    int storeLengthY = 4;
+    int storeLengthY = 6;
+    int ShopBtnFactorX = 20;
+    int ShopBtnFactorY = 10;
+    int switchShopWidth = 120;
+    int switchShopHeight = 20;
+    int switchShopShift = 0;
+    int closeShopWidth = 80;
+    int closeShopHeight = 20;
+    int closeShopShift = 140;
+    int shopAcc = -1;
+    int shopFinalX = boardWidth/2 - 50;
+    int shopTempX = (int)(boardWidth*0.9);
+    int shopBounce = 0;
+    int shopBounceMax = 10;
+    double shopBounceSlowDown = 0.7;
+    boolean shopSpeedStop = true;
+    int shopTypeWidth = 100;
+    int shopTypeHeight = 20;
+    int shopTypeShift = 240;
+    int JTPaneWidth = 80;
+    int JTPaneHeight = 15;
 
 
     //item
-    int itemBtnWidth;
-    int itemBtnHeight;
-    int itemBtnNoDealDelay = 100;
-    int itemBtnDrop = 30;
-    int itemWidth = 60;
-    int itemHeight = 60;
-    int itemFactorX = -50;
-    int itemFactorY = -50;
-
-
-    class Soldier
-    {
-        int x = soldierX;
-        int y = soldierY;
-        int width = soldierWidth;
-        int height = soldierHeight;
-        Image img;
-
-        public Soldier(Image img)
-        {
-            this.img = img;
-        }
-        public void setSold(Image img){this.img = img;}
-    }
-
-    class Parachute
-    {
-        int width = parachuteWidth;
-        int height = parachuteHeight;
-        Image img;
-        
-        public Parachute(Image img)
-        {
-            this.img = img;
-        }
-
-        public void setPara(Image img){this.img = img;}
-    }
-
-    class PlayerBullet
-    {
-        int x;
-        int y;
-        int width = pBulletWidth;
-        int height = pBulletHeight;
-        Image img;
-
-        public PlayerBullet(Image img)
-        {
-            this.img = img;
-        }
-    }
-
-
-    class Plane
-    {
-        int velocityX = planeVelocityX;
-        int velocityY = planeVelocityY;
-        int x;
-        int y;
-        int width = planeWidth;
-        int height = planeHeight;
-        Image img;
-        int health = planeHealth;
-        int index;
-
-        public Plane(Image img, int n)
-        {
-            this.img = img;
-            if (n == 0)
-            {
-                x = -100;
-                y = boardHeight - rand.nextInt(boardHeight/2)-20;
-            }
-            else
-            {
-                velocityX *= -1;
-                x = boardWidth;
-                y = boardHeight - rand.nextInt(boardHeight/2)-20;
-            }
-
-        }
-    }
-
-
-    class Boom
-    {
-        int x;
-        int y;
-        int width = boomWidth;
-        int height = boomHeight;
-        int time = 0;
-        Image img;
-
-        public Boom(Image img, int x, int y)
-        {
-            this.img = img;
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    class Missile
-    {
-        int x;
-        int y = boardHeight;
-        int width = missileWidth;
-        int height = missileHeight;
-        int velocityY = missileVelocityY;
-        int explodeHeight = rand.nextInt(maxExplosionHeight)-minExplosionHeight;
-        Image img;
-
-        public Missile(Image img)
-        {
-            this.img = img;
-            int xPos = rand.nextInt(boardWidth);
-            x = xPos;
-        }
-    }
-
-
-    class Explosion
-    {
-        int x;
-        int y;
-        int width = explosiveWidth;
-        int height = explosiveHeight;
-        int time = 0;
-        boolean hitTarget = false;
-        Image img;
-
-        public Explosion(Image img, int x, int y)
-        {
-            this.img = img;
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-
-    class Transport
-    {
-        int x = transportX;
-        int y = transportY;
-        int width = transportWidth;
-        int height = transportHeight;
-        int speed = transportSpeed;
-        Image img;
-
-        public Transport(Image img)
-        {
-            this.img = img;
-        }
-    }
-
-    class Heart
-    {
-        int x;
-        int y;
-        int width = heartWidth;
-        int height = heartHeight;
-        Image img;
-
-        public Heart(int x, int y, Image img)
-        {
-            this.x = x;
-            this.y = y;
-            this.img = img;
-        }
-    }
-
-    class Ball
-    {
-        double x;
-        double y;
-        int width = ballWidth;
-        int height = ballHeight;
-        int delay;
-        int counter = 0;
-        double speedX;
-        double speedY;
-        boolean hitTarget = false;
-        Image img;
-
-        public Ball(Image img)
-        {
-            this.img = img;
-        }
-    }
-
-    class Warning
-    {
-        int x;
-        int y;
-        int width = warningWidth;
-        int height = warningHeight;
-        int warningCounter = 0;
-        Image img;
-
-        public Warning(int x, int y, Image img)
-        {
-            this.x = x;
-            this.y = y;
-            this.img = img;
-        }
-    }
-
-
-
-    //shop to hold all the items
-    class Shop
-    {
-        //0 for abilities
-        //1 for skins
-        int storeType = 0;
-        int x = storeX;
-        int y = storeY;
-        Image img;
-
-        Item[][] abilities;
-        Item[][] skins;
-
-        public Shop(Image img)
-        {
-            this.img = img;
-            abilities = new Item[storeLengthX][storeLengthY];
-            skins = new Item[storeLengthX][storeLengthY];
-        }
-
-
-    }
-
-
-
-
-
-
-    //item class to hold all of the item
-    class Item
-    {
-        int itemX;
-        int itemY;
-        int x = shop.x + itemFactorX*itemX;
-        int y = shop.y + itemFactorY*itemY;
-        int width = itemWidth;
-        int height = itemHeight;
-        //int cost;
-        //boolean owned = false;
-        Image img;
-
-        itemBtn btnItem;
-
-        public Item(Image img, int itemX, int itemY, int cost)
-        {
-            this.img = img;
-            this.itemX = itemX;
-            this.itemY = itemY;
-            //this.cost = cost;
-            btnItem = new itemBtn(x, y+itemBtnDrop, cost);
-        }
-
-        private void buyItem()
-        {
-            btnItem.buyItem();
-        }
-
-    }
-
-
-
-    //part of item, includes the button
-    class itemBtn
-    {
-        int x;
-        int y;
-        int width = itemBtnWidth;
-        int height = itemBtnHeight;
-        JButton itemBtn;
-        int cost;
-        int timeDelay = 0;
-        boolean owned = false;
-
-        public itemBtn(int x, int y, int cost)
-        {
-            this.cost = cost;
-            this.x = x;
-            this.y = y;
-            itemBtn = new JButton(""+this.cost);
-            itemBtn.addActionListener((ActionListener) this);
-            itemBtn.setBounds(this.x, this.y, width, height);
-            itemBtn.setFocusable(false);
-            add(itemBtn);
-        }
-
-        private void buyItem()
-        {
-            if (creds >= cost && owned != true)
-            {
-                itemBtn.setText("Equip");
-                creds-=cost;
-                owned = true;
-            }
-            else
-            {
-                itemBtn.setText("Not Enough Creds");
-                itemBtns.add(this);
-            }
-        }
-
-
-        private void equipItem()
-        {
-            //see if bought
-            //unequip same-typed skin, I.E. unequip plane skin if this is a new plane skin
-            //equip this skin
-        }
-
-    }
-
-
-
-    //a part of item, ability and skin, is gonna hold the skill/feature of the item
-    class Ability
-    {
-        
-    }
-
-
-    class Skin
-    {
-        
-    }
-
-
-
-
+    int itemBtnWidth = 80; 
+    int itemBtnHeight = 15;
+    int itemBtnNoDealDelay = 80;
+    int itemBtnDrop = 45;
+    int itemWidth = 40; 
+    int itemHeight = 40; 
+    int itemFactorX = 110; //100
+    int itemFactorY = 75; //80
+    int itemShiftX = 35; //10  55
+    int itemShiftY = 42; //40  25
 
 
 
@@ -476,9 +186,10 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
 
 
     //logic
+    PlayerData PD;
     int health = 3;
     int score = 0;
-    int highScore = 0;
+    //int highScore = 0;
     int creds = 0;
     double difficultyCredsMultiplier = 1.0;
     double difficultyCredsIncrease = 0.3;
@@ -500,28 +211,37 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
     boolean beginAnimation = false;
     int transCounter = 0;
     int transCounterMax = 50;
-    
+    boolean loadingScreen = true;
+    JTextPane credits;
+    JTextPane highestScore;
+    int statsWidth = 110;
+    int statsHeight = 20;
+    int statsX = 10;
+    int statsY = 10;
+    double abilMultiplier;
+
     //buttons
-    JButton playBtn;
-    JButton howToPlayBtn;
-    JButton returnHomeBtn;
-    JButton quitBtn;
-    JButton playAgainBtn;
-    JButton shopOpenBtn;
-    JButton shopCloseBtn;
-
-
+     JButton playBtn;
+     JButton returnHomeBtn;
+     JButton quitBtn;
+     JButton playAgainBtn;
+     JButton shopOpenBtn;
+     JButton shopCloseBtn;
+     JButton switchShopBtn;
+     JTextPane shopType;
 
     //shop
-    Shop shop;
-    ArrayList<itemBtn> itemBtns;
+     Shop shop;
+    ArrayList<ItemBtn> itemBtns;
+     boolean openShop = false;
+     boolean closeShop = false;
 
     //timer for barrage
-    ArrayList<Ball> barrage;
-    Timer newBarrageTimer;
-    ArrayList<Warning> warnings;
+     ArrayList<Ball> barrage;
+     Timer newBarrageTimer;
+     ArrayList<Warning> warnings;
     ArrayList<Ball> tempBarrage;
-    
+     AppListener appListener;
     
     
     //vscode audio is broken :(
@@ -551,18 +271,143 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
         }
     }
     */
+    //
+
+
+
+    //ABILITIES
+    boolean abilActive;
+    boolean immunity;
+    int abilCountDown;
+    boolean finishedAbil;
+
+    Item abilDefault;
+    Image abilDefaultImg;
+    boolean abilBooDefault;
+
+    Item abilHealth1;
+    Image abilHealth1Img;
+    boolean abilBooHealth1;
+
+    Item abilHealth2;
+    Image abilHealth2Img;
+    boolean abilBooHealth2;
+
+    Item abilShield1;
+    Image abilShield1Img;
+    boolean abilBooShield1;
+
+    Item abilShield2;
+    Image abilShield2Img;
+    boolean abilBooShield2;
+
+    Item abilShield3;
+    Image abilShield3Img;
+    boolean abilBooShield3;
+
+    Item abilPoints1;
+    Image abilPoints1Img;
+    boolean abilBooPoints1;
+
+    Item abilPoints2;
+    Image abilPoints2Img;
+    boolean abilBooPoints2;
+
+    Item abilPoints3;
+    Image abilPoints3Img;
+    boolean abilBooPoints3;
+
+
+    //SKINS
+    //Soldier
+    Item soldierDefault;
+    Image soldierLeftDefault;
+    Image soldierRightDefault;
+
+    Item soldierMeme;
+    Image soldierLeftMeme;
+    Image soldierRightMeme;
+
+    Item soldierHell;
+    Image soldierLeftHell;
+    Image soldierRightHell;
+
+    //Plane
+    Item planeDefault;
+    Image planeLeftDefault;
+    Image planeRightDefault;
+
+    Item planeMeme;
+    Image planeLeftMeme;
+    Image planeRightMeme;
+
+    Item planeHell;
+    Image planeLeftHell;
+    Image planeRightHell;
+
+    //Cannon
+    Item cannonDefault;
+    Image cannonLeftDefault;
+
+    Item cannonMeme;
+    Image cannonLeftMeme;
+
+    Item cannonHell;
+    Image cannonLeftHell;
+
+    //Turret
+    Item turretDefault;
+    Image turretLeftDefault;
+
+    Item turretMeme;
+    Image turretLeftMeme;
+
+    Item turretHell;
+    Image turretLeftHell;
+
+    //Explosives
+    Item explosiveDefault;
+    Image explosiveLeftDefault;
+    Image explosiveRightDefault;
+
+    Item explosiveMeme;
+    Image explosiveLeftMeme;
+    Image explosiveRightMeme;
+
+    Item explosiveHell;
+    Image explosiveLeftHell;
+    Image explosiveRightHell;
+
+    //Sky
+    Item skyDefault;
+    Image skyLeftDefault;
+
+    Item skyMeme;
+    Image skyLeftMeme;
+
+    Item skyHell;
+    Image skyLeftHell;
 
 
 
 
+
+
+
+
+    
 
     ParachuteSlider()
     {
         setPreferredSize(new Dimension(boardWidth, boardHeight));
+        appListener = new AppListener(this, this);
+        //if revert undo these below
         setFocusable(true);
-        addKeyListener(this);
+        addKeyListener(appListener);
 
-        //load images
+        //load images 
+
+        //DEFAULT IMAGES
         backgroundImg = new ImageIcon(getClass().getResource("./skyLine.png")).getImage();
         soldierRightImg = new ImageIcon(getClass().getResource("./soldierRight.png")).getImage();
         soldierLeftImg = new ImageIcon(getClass().getResource("./soldierLeft.png")).getImage();
@@ -580,49 +425,138 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
         ballImg = new ImageIcon(getClass().getResource("./ball.png")).getImage();
         warningImg = new ImageIcon(getClass().getResource("./warning.png")).getImage();
         parachuteIconImg = new ImageIcon(getClass().getResource("./parachuteIcon.png")).getImage();
-        shopBackground = new ImageIcon(getClass().getResource("./parachuteIcon.png")).getImage();
+        shopBackground = new ImageIcon(getClass().getResource("./gray.png")).getImage();
+
+
+
+        //ABILITIES
+
+        abilDefaultImg = new ImageIcon(getClass().getResource("./abilNone.png")).getImage();
+        abilHealth1Img = new ImageIcon(getClass().getResource("./abilHealth1.png")).getImage();
+        abilHealth2Img = new ImageIcon(getClass().getResource("./abilHealth2.png")).getImage();
+        abilShield1Img = new ImageIcon(getClass().getResource("./abilShield1.png")).getImage();
+        abilShield2Img = new ImageIcon(getClass().getResource("./abilShield2.png")).getImage();
+        abilShield3Img = new ImageIcon(getClass().getResource("./abilShield3.png")).getImage();
+        abilPoints1Img = new ImageIcon(getClass().getResource("./abilPoints1.png")).getImage();
+        abilPoints2Img = new ImageIcon(getClass().getResource("./abilPoints2.png")).getImage();
+        abilPoints3Img = new ImageIcon(getClass().getResource("./abilPoints3.png")).getImage();
+
+
         
+
+
+
+
+
+
+
+
+
+        //SKINS
+
+        //Soldier
+        soldierLeftDefault = new ImageIcon(getClass().getResource("./soldierLeft.png")).getImage();
+        soldierRightDefault = new ImageIcon(getClass().getResource("./soldierRight.png")).getImage();
+
+        soldierLeftMeme = new ImageIcon(getClass().getResource("./soldierLeftMeme.png")).getImage();
+        soldierRightMeme = new ImageIcon(getClass().getResource("./soldierRightMeme.png")).getImage();
+
+        soldierLeftHell = new ImageIcon(getClass().getResource("./soldierLeftHell.png")).getImage();
+        soldierRightHell = new ImageIcon(getClass().getResource("./soldierRightHell.png")).getImage();
+
+        //Plane
+        planeLeftDefault = new ImageIcon(getClass().getResource("./planeLeft.png")).getImage();
+        planeRightDefault = new ImageIcon(getClass().getResource("./planeRight.png")).getImage(); 
+
+        planeLeftMeme = new ImageIcon(getClass().getResource("./planeLeftMeme.png")).getImage();
+        planeRightMeme = new ImageIcon(getClass().getResource("./planeRightMeme.png")).getImage();
+
+        planeLeftHell = new ImageIcon(getClass().getResource("./planeLeftHell.png")).getImage();
+        planeRightHell = new ImageIcon(getClass().getResource("./planeRightHell.png")).getImage();
+
+        //Cannon
+        cannonLeftDefault = new ImageIcon(getClass().getResource("./cannonBall.png")).getImage();
+        
+        cannonLeftMeme = new ImageIcon(getClass().getResource("./cannonLeftMeme.png")).getImage();
+        
+        cannonLeftHell = new ImageIcon(getClass().getResource("./cannonLeftHell.png")).getImage();
+        
+        //Turret
+        turretLeftDefault = new ImageIcon(getClass().getResource("./ball.png")).getImage();
+        
+        turretLeftMeme = new ImageIcon(getClass().getResource("./turretLeftMeme.png")).getImage();
+
+        turretLeftHell = new ImageIcon(getClass().getResource("./turretLeftHell.png")).getImage();
+
+        //Explosives
+        explosiveLeftDefault = new ImageIcon(getClass().getResource("./boom.png")).getImage();
+        explosiveRightDefault = new ImageIcon(getClass().getResource("./missile.png")).getImage();
+
+        explosiveLeftMeme = new ImageIcon(getClass().getResource("./explosiveLeftMeme.png")).getImage();
+        explosiveRightMeme = new ImageIcon(getClass().getResource("./explosiveRightMeme.png")).getImage();
+
+        explosiveLeftHell = new ImageIcon(getClass().getResource("./explosiveLeftHell.png")).getImage();
+        explosiveRightHell = new ImageIcon(getClass().getResource("./explosiveRightHell.png")).getImage();
+
+        //Sky
+        skyLeftDefault = new ImageIcon(getClass().getResource("./skyLine.png")).getImage();
+        
+        skyLeftMeme = new ImageIcon(getClass().getResource("./skyLeftMeme.png")).getImage();
+
+        skyLeftHell = new ImageIcon(getClass().getResource("./skyLeftHell.png")).getImage();
+
+
+
+
+
+
+        //testing
+        
+        //shop.abilities[0][0] = item1;
+        
+
+
+
+
         //buttons
         this.setLayout(null);
 
+        
+        
         //play button
         playBtn = new JButton("Play");
-        playBtn.addActionListener(this);
+        playBtn.addActionListener(new AppListener(this, this));
         playBtn.setBounds(boardWidth - 405-5, boardHeight -50 , 180, 40);
         playBtn.setFocusable(false);
         add(playBtn);
         
-        //how to play button
-        howToPlayBtn = new JButton("How to Play");
-        howToPlayBtn.addActionListener(this);
-        howToPlayBtn.setBounds(boardWidth - 375, boardHeight-120 , 110, 35);
-        howToPlayBtn.setFocusable(false);
-        add(howToPlayBtn);
 
         //return home button
         returnHomeBtn = new JButton("Return Home");
-        returnHomeBtn.addActionListener(this);
+        returnHomeBtn.addActionListener(new AppListener(this, this));
         returnHomeBtn.setBounds(boardWidth/2 -70, boardHeight/2, 140, 35);
         returnHomeBtn.setFocusable(false);
         add(returnHomeBtn);
+        returnHomeBtn.setVisible(false);
 
         //quit button
         quitBtn = new JButton("Quit");
-        quitBtn.addActionListener(this);
-        quitBtn.setBounds(boardWidth - 357, boardHeight-155 , 75, 35);
+        quitBtn.addActionListener(new AppListener(this, this));
+        quitBtn.setBounds(boardWidth - 357, boardHeight-120 , 75, 35);
         quitBtn.setFocusable(false);
         add(quitBtn);
         
         //play again button
         playAgainBtn = new JButton("Play Again");
-        playAgainBtn.addActionListener(this);
+        playAgainBtn.addActionListener(new AppListener(this, this));
         playAgainBtn.setBounds(boardWidth/2 - 80, boardHeight/2 - 35, 160, 35);
         playAgainBtn.setFocusable(false);
         add(playAgainBtn);
+        playAgainBtn.setVisible(false);
 
         //shop open button
         shopOpenBtn = new JButton("Shop");
-        shopOpenBtn.addActionListener(this);   //110
+        shopOpenBtn.addActionListener(new AppListener(this, this));   //110
         shopOpenBtn.setBounds(boardWidth - 393, boardHeight - 85, 145, 35);
         shopOpenBtn.setFocusable(false);
         add(shopOpenBtn);
@@ -640,18 +574,23 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
         */
 
 
+        
+        shop = new Shop(shopBackground, storeX, storeY, storeWidth, storeHeight, shopAcc, ShopBtnFactorX, ShopBtnFactorY, switchShopShift, switchShopWidth,
+        switchShopHeight, closeShopShift, closeShopWidth, closeShopHeight, shopTypeShift, shopTypeWidth, shopTypeHeight, storeLengthX, storeLengthY, this, appListener, this);
+        //item1 = new Item();
+        //item2 = new Item(missileImg, "balls", 10, 1, 0, 100);
+        //shop.abilities[0][0] = item1;
+        //shop.abilities[1][0] = item2;
 
-
-
-
-        soldier = new Soldier(soldierRightImg);
-        parachute = new Parachute(para1Img);
+        PD = new PlayerData(storeLengthX, storeLengthY);
+        soldier = new Soldier(soldierRightImg, soldierX, soldierY, soldierWidth, soldierHeight, soldierAcc);
+        parachute = new Parachute(para1Img, parachuteWidth, parachuteHeight);
         planes = new ArrayList<>();
         bullets = new ArrayList<>();
         booms = new ArrayList<>();
         missiles = new ArrayList<>();
         explosives = new ArrayList<>();
-        transport = new Transport(transportImg);
+        transport = new Transport(transportImg, transportX, transportY, transportWidth, transportHeight, transportSpeed);
         hearts = new ArrayList<>();
         barrage = new ArrayList<>();
         warnings = new ArrayList<>();
@@ -659,9 +598,183 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
         itemBtns = new ArrayList<>();
 
 
+        credits = new JTextPane();
+        credits.setText("Credits: "+creds);
+        credits.setBackground(Color.GRAY);
+        credits.setForeground(Color.BLACK);
+        credits.setBounds(statsX, statsY, statsWidth, statsHeight);
+        add(credits);
+
+        highestScore = new JTextPane();
+        highestScore.setText("High Score: "+PD.getHighScore());
+        highestScore.setBackground(Color.GRAY);
+        highestScore.setForeground(Color.BLACK);
+        highestScore.setBounds(statsX, statsY + 30, statsWidth, statsHeight);
+        add(highestScore);
+
+
+
+
+        abilActive = false;
+        immunity = false;
+        abilCountDown = 0;
+        finishedAbil = false;
+        abilMultiplier = 1.0;
+        //Abilities
+        abilDefault = new Item(abilDefaultImg, "None", -1, 0, 0, 0, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        abilHealth1 = new Item(abilHealth1Img, "Heart Gain", 1, 1, 0, 150, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        abilHealth2 = new Item(abilHealth2Img, "Double Heart Gain", 1, 2, 0, 300, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        abilShield1 = new Item(abilShield1Img, "Shield", 180, 0, 1, 150, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        abilShield2 = new Item(abilShield2Img, "Force Field", 360, 1, 1, 300, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        abilShield3 = new Item(abilShield3Img, "Hex Dome", 540, 2, 1, 500, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        abilPoints1 = new Item(abilPoints1Img, "x1.5 Points", -1, 0, 2, 150, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        abilPoints2 = new Item(abilPoints2Img, "x2.0 Points", -1, 1, 2, 300, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        abilPoints3 = new Item(abilPoints3Img, "x2.5 Points", -1, 2, 2, 500, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        shop.getAbilities()[0][0] = abilDefault;
+        shop.getAbilities()[1][0] = abilHealth1;
+        shop.getAbilities()[2][0] = abilHealth2;
+        shop.getAbilities()[0][1] = abilShield1;
+        shop.getAbilities()[1][1] = abilShield2;
+        shop.getAbilities()[2][1] = abilShield3;
+        shop.getAbilities()[0][2] = abilPoints1;
+        shop.getAbilities()[1][2] = abilPoints2;
+        shop.getAbilities()[2][2] = abilPoints3;
+
+        
+        ItemBtn btnItem = shop.getAbilities()[0][0].getBtnItem();
+        btnItem.setOwned(true);
+        btnItem.getItemBtn().setText("Equipped");
+
+
+
+
+
+
+
+        //Skins
+
+        //soldier
+        soldierDefault = new Item(soldierLeftDefault, soldierRightDefault, "Default Plane", "Soldier", 0, 0, 0, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        soldierMeme = new Item(soldierLeftMeme, soldierRightMeme, "Toy Soldier", "Soldier", 1, 0, 100, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        soldierHell = new Item(soldierLeftHell, soldierRightHell, "Hell Soldier", "Soldier", 2, 0, 200, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        shop.getSkins()[0][0] = soldierDefault;
+        shop.getSkins()[1][0] = soldierMeme;
+        shop.getSkins()[2][0] = soldierHell;
+
+
+        //planes
+        planeDefault = new Item(planeLeftDefault, planeRightDefault, "Default Plane", "Plane", 0, 1, 0, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        planeMeme = new Item(planeLeftMeme, planeRightMeme, "Neon Cat Plane", "Plane", 1, 1, 100, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        planeHell = new Item(planeLeftHell, planeRightHell, "Hell Plane", "Plane", 2, 1, 200, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        shop.getSkins()[0][1] = planeDefault;
+        shop.getSkins()[1][1] = planeMeme;
+        shop.getSkins()[2][1] = planeHell;
+
+        //Cannon
+        cannonDefault = new Item(cannonLeftDefault, cannonLeftDefault, "Default Cannon", "Cannon", 0, 2, 0, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        cannonMeme = new Item(cannonLeftMeme, cannonLeftMeme, "Cake Cannon", "Cannon", 1, 2, 100, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        cannonHell = new Item(cannonLeftHell, cannonLeftHell, "Hell Cannon", "Cannon", 2, 2, 200, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        shop.getSkins()[0][2] = cannonDefault;
+        shop.getSkins()[1][2] = cannonMeme;
+        shop.getSkins()[2][2] = cannonHell;
+
+
+        //Turret
+        turretDefault = new Item(turretLeftDefault, turretLeftDefault, "Default Turret", "Turret", 0, 3, 0, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        turretMeme = new Item(turretLeftMeme, turretLeftMeme, "Cup Cake Turret", "Turret", 1, 3, 100, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        turretHell = new Item(turretLeftHell, turretLeftHell, "Hell Turret", "Turret", 2, 3, 200, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        shop.getSkins()[0][3] = turretDefault;
+        shop.getSkins()[1][3] = turretMeme;
+        shop.getSkins()[2][3] = turretHell;
+
+        //Explosive
+        explosiveDefault = new Item(explosiveLeftDefault, explosiveRightDefault, "Default Explosive", "Explosive", 0, 4, 0, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        explosiveMeme = new Item(explosiveLeftMeme, explosiveRightMeme, "Cake Explosive", "Explosive", 1, 4, 100, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        explosiveHell = new Item(explosiveLeftHell, explosiveRightHell, "Hell Explosive", "Explosive", 2, 4, 200, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        shop.getSkins()[0][4] = explosiveDefault;
+        shop.getSkins()[1][4] = explosiveMeme;
+        shop.getSkins()[2][4] = explosiveHell;
+
+        //Turret
+        skyDefault = new Item(skyLeftDefault, skyLeftDefault, "Default Sky", "Sky", 0, 5, 0, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        skyMeme = new Item(skyLeftMeme, skyLeftMeme, "Candy Sky", "Sky", 1, 5, 100, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        skyHell = new Item(skyLeftHell, skyLeftHell, "Hell Sky", "Sky", 2, 5, 200, shop, soldier, storeX, storeY, itemWidth, itemHeight,
+        itemFactorX, itemFactorY, itemShiftX, itemShiftY, itemBtnDrop, itemBtnWidth, itemBtnHeight, JTPaneWidth, JTPaneHeight, this, PD);
+
+        shop.getSkins()[0][5] = skyDefault;
+        shop.getSkins()[1][5] = skyMeme;
+        shop.getSkins()[2][5] = skyHell;
+
+
+
+        for (int i = 0; i < storeLengthY; i++)
+        {
+            ItemBtn btnItemm = shop.getSkins()[0][i].getBtnItem();
+            btnItemm.setOwned(true);
+            btnItemm.getItemBtn().setText("Equipped");
+        }
+
+
+
+
+
+
+        PD.addCreds(10000);
         for (int i = 1; i <= 3; i++)
         {
-            Heart heart = new Heart(boardWidth-(heartWidth*(i-1) + (heartWidth/4)*i) -35, 8, heartImg);
+            Heart heart = new Heart(heartImg, boardWidth-(heartWidth*(i-1) + (heartWidth/4)*i) -35, 8, heartWidth, heartHeight);
             hearts.add(heart);
         }
 
@@ -698,12 +811,13 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
             
 
             
-        gameLoop = new Timer(1000/60, this);
+        gameLoop = new Timer(1000/60, new AppListener(this, this));
         gameLoop.start();
 
         //add cloud and birds?
         
     }
+
 
 
 
@@ -715,16 +829,16 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
     {
         for (int i = 0; i < rand.nextInt(bonusBallCount)+minBallCount; i++)
         {
-            Ball ball = new Ball(ballImg);
-            ball.delay = ballDelay*i;
+            Ball ball = new Ball(ballImg, ballWidth, ballHeight);
+            ball.setDelay(ballDelay*i);// = ballDelay*i;
             tempBarrage.add(ball);
         }
     }
 
     public void warningCalc()
     {
-        int objX = soldier.x;
-        int objY = soldier.y;
+        int objX = soldier.getX();
+        int objY = soldier.getY();
         int randomXSpawn = rand.nextInt(boardWidth+200)-100;
         int randomYSpawn = rand.nextInt(100)+boardHeight;
         double speedX;
@@ -742,7 +856,7 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
             speedX = 1.0*(objX - randomXSpawn)/ballSpeedFactor;
         }
         speedY = -1.0*(randomYSpawn - objY)/ballSpeedFactor;
-        Warning warning = new Warning(objX, objY, warningImg);
+        Warning warning = new Warning(warningImg, objX, objY, warningWidth, warningHeight);
         warnings.add(warning);
         //warning.x = objX;
         //warning.y = objY;
@@ -756,16 +870,16 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
             int randY = rand.nextInt(ballSeperation);
             if (counter%2 == 0)
             {
-                ball.x = randomXSpawn + randX;
-                ball.y = randomYSpawn + randY;
+                ball.setX(randomXSpawn + randX);// = randomXSpawn + randX;
+                ball.setY(randomYSpawn + randY);// = randomYSpawn + randY;
             }
             else
             {
-                ball.x = randomXSpawn - randX;
-                ball.y = randomYSpawn - randY;
+                ball.setX(randomXSpawn - randX);// = randomXSpawn - randX;
+                ball.setY(randomYSpawn - randY);// = randomYSpawn - randY;
             }
-            ball.speedX = speedX;
-            ball.speedY = speedY;
+            ball.setSpeedX(speedX);// = speedX;
+            ball.setSpeedY(speedY);// = speedY;
         }
         barrage.addAll(tempBarrage);
         tempBarrage.clear();
@@ -776,17 +890,17 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
 
 
 
-    public void playerShootBullet()
+    public  void playerShootBullet()
     {
-        PlayerBullet bullet = new PlayerBullet(playerBulletImg);
-        bullet.x = soldier.x + soldier.width/2;
-        bullet.y = soldier.y + soldier.height;
+        PlayerBullet bullet = new PlayerBullet(playerBulletImg, pBulletWidth, pBulletHeight);
+        bullet.setX(soldier.getX() + soldier.getWidth()/2);// = soldier.x + soldier.width/2;
+        bullet.setY(soldier.getY() + soldier.getHeight());// = soldier.y + soldier.height;
         bullets.add(bullet);
     }
 
 
 
-    public void beginGame()
+    public  void beginGame()
     {
         beginAnimation = false;
         start = true;
@@ -796,7 +910,7 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
     }
 
 
-    public void collision()
+    public  void collision()
     {
         try {
             for (int i = 0; i < bullets.size(); i++)
@@ -808,14 +922,14 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
                     try {    
                         PlayerBullet a = bullets.get(i);
                         Plane b = planes.get(j);
-                        if (a.x < b.x + b.width &&
-                            a.x + a.width > b.x &&
-                            a.y < b.y + b.height &&
-                            a.y + a.height > b.y)
+                        if (a.getX() < b.getX() + b.getWidth() &&
+                            a.getX() + a.getWidth() > b.getX() &&
+                            a.getY() < b.getY() + b.getHeight() &&
+                            a.getY() + a.getHeight() > b.getY())
                         {
                             bullets.remove(i);
-                            b.health--;
-                            if (b.health <= 0)
+                            b.setHealth(b.getHealth()-1);//--;
+                            if (b.getHealth() <= 0)
                             {
                                 score++;
                                 if (score%10 == 0)
@@ -826,9 +940,9 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
                                     placeMissileTimer.setDelay(missileDelay);
                                     difficultyCredsMultiplier += difficultyCredsIncrease;
                                 }
-                                booms.add(new Boom(boomImg, b.x, b.y));
+                                booms.add(new Boom(boomImg, b.getX(), b.getY(), boomWidth, boomHeight));
                                 planes.remove(j);
-                                if (score > highScore){highScore = score;}
+                                if (score > PD.getHighScore()){PD.setHighScore(score);}
                             }
                         }
                         } catch (Exception e)
@@ -851,12 +965,12 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
 
         for (int i = 0; i < bullets.size(); i++)
         {
-        if (bullets.get(i).y > boardHeight) {bullets.remove(i);}
+        if (bullets.get(i).getY() > boardHeight) {bullets.remove(i);}
         }
 
         for (int i = 0; i < planes.size(); i++)
         {
-        if (planes.get(i).x > boardWidth + 225 || planes.get(i).x < -225)
+        if (planes.get(i).getX() > boardWidth + 225 || planes.get(i).getX() < -225)
             {
                 planes.remove(i);
             }
@@ -865,12 +979,12 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
         for (Explosion a : explosives)
         {
             
-            if (a.x < soldier.x + soldier.width &&
-                a.x + a.width > soldier.x &&
-                a.y < soldier.y + soldier.height &&
-                a.y + a.height > soldier.y && (a.hitTarget == false))
+            if (a.getX() < soldier.getX() + soldier.getWidth() &&
+                a.getX() + a.getWidth() > soldier.getX() &&
+                a.getY() < soldier.getY() + soldier.getHeight() &&
+                a.getY() + a.getHeight() > soldier.getY() && (a.getHitTarget() == false) && (immunity == false))
             {
-                a.hitTarget = true;
+                a.setHitTarget(true);// = true;
                 if (health != 0)
                 {
                     hearts.remove(hearts.size()-1);
@@ -887,12 +1001,12 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
         for (Ball a : barrage)
         {
             
-            if (a.x < soldier.x + soldier.width &&
-                a.x + a.width > soldier.x &&
-                a.y < soldier.y + soldier.height &&
-                a.y + a.height > soldier.y && (a.hitTarget == false))
+            if (a.getX() < soldier.getX() + soldier.getWidth() &&
+            a.getX() + a.getWidth() > soldier.getX() &&
+            a.getY() < soldier.getY() + soldier.getHeight() &&
+            a.getY() + a.getHeight() > soldier.getY() && (a.getHitTarget() == false) && (immunity == false))
             {
-                a.hitTarget = true;
+                a.setHitTarget(true);// = true;
                 if (health != 0)
                 {
                     hearts.remove(hearts.size()-1);
@@ -918,12 +1032,12 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
         if (randomSideX == 0)
         {
             //System.out.println("R");
-            plane = new Plane(planeRightImg, randomSideX);
+            plane = new Plane(planeRightImg, randomSideX, planeVelocityX, planeVelocityY, planeWidth, planeHeight, planeHealth, boardWidth, boardHeight);
         }
         else
         {
             //System.out.println("L");
-            plane = new Plane(planeLeftImg, randomSideX);
+            plane = new Plane(planeLeftImg, randomSideX, planeVelocityX, planeVelocityY, planeWidth, planeHeight, planeHealth, boardWidth, boardHeight);
         }
         planes.add(plane);
     }
@@ -931,7 +1045,7 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
 
     public void placeMissile()
     {
-        Missile missile = new Missile(enemyBulletImg);
+        Missile missile = new Missile(enemyBulletImg, boardWidth, boardHeight, missileWidth, missileHeight, missileVelocityY, maxExplosionHeight, minExplosionHeight);
         missiles.add(missile);
     }
 
@@ -954,54 +1068,124 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
 
     public void draw(Graphics g)
     {
-        
         g.drawImage(backgroundImg, 0,0, boardWidth,boardHeight, null);
-
         //add statement with start here
         if (beginAnimation)
         {
-            g.drawImage(transportImg, transport.x, transport.y, transport.width, transport.height, null);
+            g.drawImage(transportImg, transport.getX(), transport.getY(), transport.getWidth(), transport.getHeight(), null);
         }
         else if (start)
         {
-            g.drawImage(parachute.img, soldier.x-14, soldier.y-60, parachute.width, parachute.height, null);
-            g.drawImage(soldier.img, soldier.x, soldier.y, soldier.width, soldier.height, null);
+            g.drawImage(parachute.getPara(), soldier.getX()-14, soldier.getY()-60, parachute.getWidth(), parachute.getHeight(), null);
+            g.drawImage(soldier.getImg(), soldier.getX(), soldier.getY(), soldier.getWidth(), soldier.getHeight(), null);
             
             if (transCounter <= transCounterMax)
             {
-                g.drawImage(transportImg, transport.x, transport.y, transport.width, transport.height, null);
+                g.drawImage(transportImg, transport.getX(), transport.getY(), transport.getWidth(), transport.getHeight(), null);
             }
             transCounter++;
         }   
 
 
-        for (int i = 0; i < itemBtns.size(); i++)
+        //shop
+        if (openShop)
         {
-            itemBtn iBtn = itemBtns.get(i);
-            if (iBtn.timeDelay < itemBtnNoDealDelay)
+            g.drawImage(shop.getImg(), shop.getX(), shop.getY(), shop.getWidth(), shop.getHeight(), null);
+            shop.updateValues();
+            if (shopBounce <= shopBounceMax)
             {
-                iBtn.timeDelay++;
+                if (shopFinalX < shop.getX() && shopSpeedStop)
+                {
+                    shop.setVelocity(shop.getVelocity()+shop.getAcc());// += shop.acc;
+                    shop.setX(shop.getX() + shop.getVelocity());// += shop.velocity;
+                }
+                else
+                {
+                    if (shopSpeedStop)
+                    {
+                        shop.setVelocity(0);// = 0;
+                        shopBounce++;
+                        shopSpeedStop = false;
+                        shopTempX *= shopBounceSlowDown;
+                    }
+                    shop.setVelocity(shop.getVelocity()+-1*shop.getAcc());// += -1*shop.acc;
+                    shop.setX(shop.getX() + shop.getVelocity());// += shop.velocity;
+                    if (shop.getX() >= shopTempX)
+                    {
+                        shopSpeedStop = true;
+                    }
+                }
+            }
+            else if (shopTempX != shopFinalX)
+            {
+                shopTempX = (int)(boardWidth*shopBounceSlowDown);
+                shop.setX(shopFinalX);// = shopFinalX;
+            }
+        }
+
+
+        if (closeShop)
+        {
+            g.drawImage(shop.getImg(), shop.getX(), shop.getY(), shop.getWidth(), shop.getHeight(), null);
+            shop.updateValues();
+            if (shop.getX() <= 700)
+            {
+                shop.setX(shop.getX() + shop.getVelocity());// += shop.velocity;
             }
             else
             {
-                iBtn.itemBtn.setText(""+iBtn.cost);
-                iBtn.timeDelay = 0;
+                shopSpeedStop = true;
+                shopTempX = (int)(boardWidth*0.9);
+                shop.setVelocity(0);// = 0;
+                shop.setX(700);// = 700;
+                shopBounce = 0;
+                closeShop = false;
+            }
+        }
+
+
+        //add looping feature to draw all abilities/skins
+        //g.drawImage(shop.abilities[0][0].img, shop.abilities[0][0].x, shop.abilities[0][0].y, shop.abilities[0][0].width, shop.abilities[0][0].height, null);
+        //g.drawImage(shop.abilities[1][0].img, shop.abilities[1][0].x, shop.abilities[1][0].y, shop.abilities[1][0].width, shop.abilities[1][0].height, null);
+        initializeItems(g);
+
+
+
+
+
+
+
+
+        for (int i = 0; i < itemBtns.size(); i++)
+        {
+            ItemBtn iBtn = itemBtns.get(i);
+            if (iBtn.getTimeDelay() < itemBtnNoDealDelay)
+            {
+                iBtn.setTimeDelay(iBtn.getTimeDelay() + 1);//++;
+            }
+            else
+            {
+                iBtn.getItemBtn().setText(""+iBtn.getCost());
+                iBtn.setTimeDelay(0);// = 0;
                 itemBtns.remove(i);
             }
 
         }
 
-        for (int i = 0; i < hearts.size(); i++)
+        if (start)
         {
-            Heart heart = hearts.get(i);
-            g.drawImage(heart.img, heart.x, heart.y, heart.width, heart.height, null);
+            for (int i = 0; i < hearts.size(); i++)
+            {
+                Heart heart = hearts.get(i);
+                g.drawImage(heart.getImg(), heart.getX(), heart.getY(), heart.getWidth(), heart.getHeight(), null);
 
+            }
         }
 
         for (int i = 0; i < barrage.size(); i++)
         {
             Ball ball = barrage.get(i);
-            g.drawImage(ballImg, (int)ball.x, (int)ball.y, ball.width, ball.height, null);
+            g.drawImage(ballImg, (int)ball.getX(), (int)ball.getY(), ball.getWidth(), ball.getHeight(), null);
         }
         
         
@@ -1015,7 +1199,7 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
             for (int i = 0; i < barrage.size(); i++)
             {   
                 Ball ball = barrage.get(i);
-                if (ball.y < 0)
+                if (ball.getY() < 0)
                 {
                     barrage.remove(i);
                 }
@@ -1034,10 +1218,10 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
         for (int i = 0; i < warnings.size(); i++)
         {
             Warning warning = warnings.get(i);
-            g.drawImage(warning.img, warning.x, warning.y, warning.width, warning.height, null);
-            if (warning.warningCounter != warningDelay)
+            g.drawImage(warning.getImg(), warning.getX(), warning.getY(), warning.getWidth(), warning.getHeight(), null);
+            if (warning.getWarningCounter() != warningDelay)
             {
-                warning.warningCounter++;
+                warning.setWarningCounter(warning.getWarningCounter() + 1);//++;
             }
             else
             {
@@ -1045,34 +1229,36 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
             }
         }
         
+        useAbil(g);
 
 
         for (int i = 0; i < bullets.size(); i++)
         {
             PlayerBullet bullet = bullets.get(i);
-            g.drawImage(bullet.img, bullet.x, bullet.y, bullet.width, bullet.height, null);
+            g.drawImage(bullet.getImg(), bullet.getX(), bullet.getY(), bullet.getWidth(), bullet.getHeight(), null);
         }
         for (int i = 0; i < planes.size(); i++)
         {
             Plane plane = planes.get(i);
-            g.drawImage(plane.img, plane.x, plane.y, plane.width, plane.height, null);
+            g.drawImage(plane.getImg(), plane.getX(), plane.getY(), plane.getWidth(), plane.getHeight(), null);
         }
 
         for (int i = 0; i < booms.size(); i++)
         {
             Boom boom = booms.get(i);
-            g.drawImage(boom.img, boom.x, boom.y, boom.width, boom.height, null);
-            boom.time += 1;
-            if (boom.time == boomLifeTime) {booms.remove(i);}
+            g.drawImage(boom.getImg(), boom.getX(), boom.getY(), boom.getWidth(), boom.getHeight(), null);
+            boom.setTime(boom.getTime() + 1);// += 1;
+            if (boom.getTime() == boomLifeTime) {booms.remove(i);}
         }
 
         for (int i = 0; i < missiles.size(); i++)
         {
             Missile missile = missiles.get(i);
-            g.drawImage(missile.img, missile.x, missile.y, missile.width, missile.height, null);
-            if (missile.y <= missile.explodeHeight) 
+            g.drawImage(missile.getImg(), missile.getX(), missile.getY(), missile.getWidth(), missile.getHeight(), null);
+            if (missile.getY() <= missile.getExplodeHeight()) 
             {
-                Explosion explosive = new Explosion(missileImg, missile.x, missile.y);
+                
+                Explosion explosive = new Explosion(missileImg, missile.getX() - explosiveWidth/2 + missile.getWidth()/2, missile.getY() - explosiveHeight/2, explosiveWidth, explosiveHeight);
                 missiles.remove(i);
                 explosives.add(explosive);
             }   
@@ -1082,36 +1268,37 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
         for (int i = 0; i < explosives.size(); i++)
         {
             Explosion explosive = explosives.get(i);
-            g.drawImage(explosive.img, explosive.x, explosive.y, explosive.width, explosive.height, null);
-            explosive.time += 1;
-            if (explosive.time == explosionLifeTime) {explosives.remove(i);}
+            g.drawImage(explosive.getImg(), explosive.getX(), explosive.getY(), explosive.getWidth(), explosive.getHeight(), null);
+            explosive.setTime(explosive.getTime() + 1);// += 1;
+            if (explosive.getTime() == explosionLifeTime) {explosives.remove(i);}
         }
 
-        g.setColor(Color.BLACK);
+        g.setColor(Color.GRAY);
         g.setFont(new Font("Calibri", Font.PLAIN, 32));
-        if (start == false|| beginAnimation == false && transport.x <= 0)
+        //if ((start == false|| beginAnimation == false && transport.x <= 0) || openShop != true)
+        if (loadingScreen)
         {
             g.drawImage(parachuteIconImg, 250-25, boardHeight/2-60-60, 150+50, 150+50, null);
             g.setFont(new Font("Calibri",Font.PLAIN, 32));
             g.drawString("Parachute Sliders",190,boardHeight/3-60);
-            g.setFont(new Font("Calibri",Font.PLAIN, 20));
-            g.drawString("Press \"Up Arrow\" to Begin",10,boardHeight-70);
-            g.drawString("Press \"Left Arrow\" to Move Left",10,boardHeight-50);
-            g.drawString("Press \"Right Arrow\" to Move Right",10,boardHeight-30);
-            g.drawString("Press \"Down Arrow\" to Shoot",10,boardHeight-10);
+            //g.setFont(new Font("Calibri",Font.PLAIN, 20));
+            //g.drawString("Press \"Up Arrow\" to Begin",10,boardHeight-70);
+            //g.drawString("Press \"Left Arrow\" to Move Left",10,boardHeight-50);
+            //g.drawString("Press \"Right Arrow\" to Move Right",10,boardHeight-30);
+            //g.drawString("Press \"Down Arrow\" to Shoot",10,boardHeight-10);
         }
 
-        if (health <= 0)
-        {
-            g.drawString("Score: "+ String.valueOf((int) score), 10, 35);
-            g.drawString("Press \"Up Arrow\" to Play Again", 90, boardHeight/2);
-            g.drawString("High Score: "+String.valueOf(highScore), 220, 35);
-            g.drawString("Game Over!",235,boardHeight/3+40);
-        }
-        else
+        //if (health <= 0)
+        //{
+        //    g.drawString("Score: "+ String.valueOf((int) score), 10, 35);
+        //    g.drawString("Press \"Up Arrow\" to Play Again", 90, boardHeight/2);
+        //    g.drawString("High Score: "+String.valueOf(highScore), 220, 35);
+        //    g.drawString("Game Over!",235,boardHeight/3+40);
+        //}
+        if (start)
         {
             g.drawString("Score: "+String.valueOf((int)score), 10, 35);
-            g.drawString("High Score: "+String.valueOf(highScore), 220, 35);
+            g.drawString("High Score: "+String.valueOf(PD.getHighScore()), 220, 35);
             //g.drawString("Health: "+String.valueOf((int)health),boardWidth-140, 35);
         }
 
@@ -1122,18 +1309,18 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
 
     public void move()
     {
-        checkKeyHeld();
-        soldier.x += velocityX;
-        soldier.x = Math.min(soldier.x, boardWidth-soldier.width);
-        soldier.x = Math.max(soldier.x, 0);
+        appListener.checkKeyHeld();
+        soldier.setX(soldier.getX() + velocityX);// += velocityX;
+        soldier.setX(Math.min(soldier.getX(), boardWidth-soldier.getWidth()));// = Math.min(soldier.x, boardWidth-soldier.width);
+        soldier.setX(Math.max(soldier.getX(), 0));// = Math.max(soldier.x, 0);
 
 
         if (transCounter <= transCounterMax && start)
         {
-            transport.x += transport.speed;
+            transport.setX(transport.getX() + transport.getSpeed());// += transport.speed;
         }
 
-        if (transport.x >= boardWidth/2)
+        if (transport.getX() >= boardWidth/2 && start)
         {
             beginGame();
         }
@@ -1143,14 +1330,14 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
         for (int i = 0; i < barrage.size(); i++)
         {
             Ball ball = barrage.get(i);
-            if (ball.delay != ball.counter) 
+            if (ball.getDelay() != ball.getCounter()) 
             {
-                ball.counter++;
+                ball.setCounter(ball.getCounter() + 1);//++;
             }
             else
             {    
-                ball.x += ball.speedX;
-                ball.y += ball.speedY;
+                ball.setX(ball.getX() + ball.getSpeedX());// += ball.speedX;
+                ball.setY(ball.getY() + ball.getSpeedY());// += ball.speedY;
             }
         }
 
@@ -1158,21 +1345,21 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
         for (int i = 0; i < bullets.size(); i++)
         {
             PlayerBullet bullet = bullets.get(i);
-            bullet.y += pBulletVelocityY;
+            bullet.setY(bullet.getY() + pBulletVelocityY);// += pBulletVelocityY;
             //System.out.println("x: "+bullet.x+"   y: "+bullet.y);
         }
 
         for (int i = 0; i < planes.size(); i++)
         {
             Plane plane = planes.get(i);
-            plane.x += plane.velocityX;
-            plane.y += plane.velocityY;
+            plane.setX(plane.getX() + plane.getVelocityX());// += plane.velocityX;
+            plane.setY(plane.getY() + plane.getVelocityY());// += plane.velocityY;
         }
 
         for (int i = 0; i < missiles.size(); i++)
         {
             Missile mis = missiles.get(i);
-            mis.y += mis.velocityY;
+            mis.setY(mis.getY() + mis.getVelocityY());// += mis.velocityY;
         }
 
 
@@ -1186,143 +1373,351 @@ public class ParachuteSlider extends JPanel implements ActionListener, KeyListen
 
 
 
-    private void checkKeyHeld()
+    public void equipSkins(Skin skin, String skinType)
     {
-        if (keyHeld.contains(KeyEvent.VK_RIGHT) && start)
+        if (skinType.equals("Soldier"))
         {
-            soldier.setSold(soldierRightImg);
-            velocityX = soldierAcc;
-        }
-        
-        if (keyHeld.contains(KeyEvent.VK_LEFT) && start)
-        {
-            soldier.setSold(soldierLeftImg);
-            velocityX = soldierAcc*-1;
-        }
-        
-        if (keyHeld.isEmpty())
-        {
-            velocityX = 0;
+            soldierLeftImg = skin.getImgL();
+            soldierRightImg = skin.getImgR();
+            soldier.setImg(soldierRightImg);
         }
 
+        if (skinType.equals("Plane"))
+        {
+            planeLeftImg = skin.getImgL();
+            planeRightImg = skin.getImgR();
+        }
 
+        if (skinType.equals("Cannon"))
+        {
+            enemyBulletImg = skin.getImgL();
+        }
+
+        if (skinType.equals("Turret"))
+        {
+            ballImg = skin.getImgL();
+        }
+
+        if (skinType.equals("Explosive"))
+        {
+            boomImg = skin.getImgL();
+            missileImg = skin.getImgR();
+        }
+
+        if (skinType.equals("Sky"))
+        {
+            backgroundImg = skin.getImgL();
+        }
     }
 
 
 
 
+//g.drawImage(missile.getImg(), missile.getX(), missile.getY(), missile.getWidth(), missile.getHeight(), null);
+//g.drawString("Score: "+String.valueOf((int)score), 10, 35);
 
-
-    @Override
-    public void keyTyped(KeyEvent e) {}
-
-
-
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if ((e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_LEFT) & start&& transport.x >= boardWidth/2) 
+    public void useAbil(Graphics g)
+    {
+        g.setFont(new Font("Calibri",Font.PLAIN, 32));
+        if (abilBooHealth1 && abilActive)
         {
-            keyHeld.add(e.getKeyCode());
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_DOWN && start && transport.x >= boardWidth/2)
-        {
-            playerShootBullet();
-        }    
-
-        if (e.getKeyCode() == KeyEvent.VK_UP && health <= 0)
-        {
-            score = 0;
-            health = 3;
-            parachute.setPara(para1Img);
-            bullets.clear();
-            planes.clear();
-            missiles.clear();
-            booms.clear();
-            barrage.clear();
-            explosives.clear();
-            soldier.x = boardWidth/2;
-            gameLoop.start();
-            warnings.clear();
-            missileDelay = 1900;
-            placeMissileTimer.setDelay(missileDelay);
-            barrageDelay = 6500;
-            newBarrageTimer.setDelay(barrageDelay);
-            start = true;
-            beginAnimation = true;
-            transCounter = 0;
-            transport.x = transportX;
-            hearts.clear();
-            for (int i = 1; i <= 3; i++)
+            g.drawImage(abilHealth1Img, 16, 45, 40, 40, null);
+            if (hearts.size() == 2 && abilHealth1.getSpecialItem().getAbil().getOffCooldown())
             {
-                Heart heart = new Heart(boardWidth-(heartWidth*(i-1) + (heartWidth/4)*i) -35, 8, heartImg);
-                hearts.add(heart);
+                hearts.clear();
+                for (int i = 1; i <= 3; i++)
+                {
+                    Heart heart = new Heart(heartImg, boardWidth-(heartWidth*(i-1) + (heartWidth/4)*i) -35, 8, heartWidth, heartHeight);
+                    hearts.add(heart);
+                }
+                health++;
+                abilHealth1.getSpecialItem().getAbil().setOffCooldown(false);
+            }
+
+            if (hearts.size() == 1 && abilHealth1.getSpecialItem().getAbil().getOffCooldown())
+            {
+                hearts.clear();
+                for (int i = 1; i <= 2; i++)
+                {
+                    Heart heart = new Heart(heartImg, boardWidth-(heartWidth*(i-1) + (heartWidth/4)*i) -35, 8, heartWidth, heartHeight);
+                    hearts.add(heart);
+                }
+                health++;
+                abilHealth1.getSpecialItem().getAbil().setOffCooldown(false);
+            }
+
+            if (abilHealth1.getSpecialItem().getAbil().getOffCooldown() == false)
+            {
+                //System.out.println(abilHealth1.getSpecialItem().getAbil().getDelay());
+                abilHealth1.getSpecialItem().getAbil().setDelay(abilHealth1.getSpecialItem().getAbil().getDelay()+1);
+                g.drawString(String.valueOf((int)((abilCountDown-abilHealth1.getSpecialItem().getAbil().getDelay())/100)), 64, 75);
+
+
+                if (abilHealth1.getSpecialItem().getAbil().getDelay() == abilCountDown)
+                {
+                    abilHealth1.getSpecialItem().getAbil().setDelay(0);
+                    abilHealth1.getSpecialItem().getAbil().setOffCooldown(true);
+                    abilActive = false;
+                }
             }
 
 
         }
-        else if (e.getKeyCode() == KeyEvent.VK_UP && start == false)
+
+
+        if (abilBooHealth2 && abilActive)
         {
-            start = true;
-            beginAnimation = true;
+            g.drawImage(abilHealth2Img, 16, 45, 40, 40, null);
+            if (hearts.size() == 2 && abilHealth2.getSpecialItem().getAbil().getOffCooldown())
+            {
+                hearts.clear();
+                for (int i = 1; i <= 3; i++)
+                {
+                    Heart heart = new Heart(heartImg, boardWidth-(heartWidth*(i-1) + (heartWidth/4)*i) -35, 8, heartWidth, heartHeight);
+                    hearts.add(heart);
+                }
+                health++;
+                abilHealth2.getSpecialItem().getAbil().setOffCooldown(false);
+            }
+
+            if (hearts.size() == 1 && abilHealth1.getSpecialItem().getAbil().getOffCooldown())
+            {
+                hearts.clear();
+                for (int i = 1; i <= 3; i++)
+                {
+                    Heart heart = new Heart(heartImg, boardWidth-(heartWidth*(i-1) + (heartWidth/4)*i) -35, 8, heartWidth, heartHeight);
+                    hearts.add(heart);
+                }
+                health = 3;
+                abilHealth2.getSpecialItem().getAbil().setOffCooldown(false);
+            }
+
+            if (abilHealth2.getSpecialItem().getAbil().getOffCooldown() == false)
+            {
+                //System.out.println(abilHealth2.getSpecialItem().getAbil().getDelay());
+                abilHealth2.getSpecialItem().getAbil().setDelay(abilHealth2.getSpecialItem().getAbil().getDelay()+1);
+                g.drawString(String.valueOf((int)((abilCountDown-abilHealth2.getSpecialItem().getAbil().getDelay())/100)), 64, 75);
+
+
+                if (abilHealth2.getSpecialItem().getAbil().getDelay() == abilCountDown)
+                {
+                    abilHealth2.getSpecialItem().getAbil().setDelay(0);
+                    abilHealth2.getSpecialItem().getAbil().setOffCooldown(true);
+                    abilActive = false;
+                }
+
+            }
         }
+
+        if (abilBooShield1 && abilActive)
+        {   
+            g.drawImage(abilShield1Img, 16, 45, 40, 40, null);
+            if (abilShield1.getSpecialItem().getAbil().getOffCooldown())
+            {
+                immunity = true;
+                finishedAbil = false;
+                abilShield1.getSpecialItem().getAbil().setOffCooldown(false);
+            }
+
+            if (abilShield1.getSpecialItem().getAbil().getOffCooldown() == false && finishedAbil == false)
+            {
+                abilShield1.getSpecialItem().getAbil().setDelay(abilShield1.getSpecialItem().getAbil().getDelay()+1);
+                if (abilShield1.getSpecialItem().getAbil().getDelay() < abilShield1.getSpecialItem().getAbil().getUsageTime())
+                {
+                    g.drawImage(abilShield1Img, soldier.getX()+10, soldier.getY()+12, 30, 50, null);
+                    g.drawString(String.valueOf((int)((abilShield1.getSpecialItem().getAbil().getUsageTime()-abilShield1.getSpecialItem().getAbil().getDelay())/100)), 64, 75);
+                }
+                else
+                {
+                    finishedAbil = true;
+                    abilShield1.getSpecialItem().getAbil().setDelay(0);
+                    immunity = false;
+                }
+            }
+
+
+            if (abilShield1.getSpecialItem().getAbil().getOffCooldown() == false && finishedAbil)
+            {
+                //System.out.println(abilShield1.getSpecialItem().getAbil().getDelay());
+                abilShield1.getSpecialItem().getAbil().setDelay(abilShield1.getSpecialItem().getAbil().getDelay()+1);
+                g.drawString(String.valueOf((int)((abilCountDown-abilShield1.getSpecialItem().getAbil().getDelay())/100)), 64, 75);
+
+                if (abilShield1.getSpecialItem().getAbil().getDelay() == abilCountDown)
+                {
+                    finishedAbil = false;
+                    abilShield1.getSpecialItem().getAbil().setDelay(0);
+                    abilShield1.getSpecialItem().getAbil().setOffCooldown(true);
+                    abilActive = false;
+                }
+
+            }
+            
+        }
+
+        if (abilBooShield2 && abilActive)
+        {
+            g.drawImage(abilShield2Img, 16, 45, 40, 40, null);
+            if (abilShield2.getSpecialItem().getAbil().getOffCooldown())
+            {
+                immunity = true;
+                abilShield2.getSpecialItem().getAbil().setOffCooldown(false);
+            }
+
+
+
+            if (abilShield2.getSpecialItem().getAbil().getOffCooldown() == false && finishedAbil == false)
+            {
+                abilShield2.getSpecialItem().getAbil().setDelay(abilShield2.getSpecialItem().getAbil().getDelay()+1);
+                if (abilShield2.getSpecialItem().getAbil().getDelay() < abilShield2.getSpecialItem().getAbil().getUsageTime())
+                {
+                    g.drawImage(abilShield2Img, soldier.getX()-soldier.getWidth(), soldier.getY()-soldier.getHeight()/2, 120, 120, null);
+                    g.drawString(String.valueOf((int)((abilShield2.getSpecialItem().getAbil().getUsageTime()-abilShield2.getSpecialItem().getAbil().getDelay())/100)), 64, 75);
+                }
+                else
+                {
+                    finishedAbil = true;
+                    abilShield2.getSpecialItem().getAbil().setDelay(0);
+                    immunity = false;
+                }
+            }
+
+
+
+
+
+            if (abilShield2.getSpecialItem().getAbil().getOffCooldown() == false && finishedAbil)
+            {
+                //System.out.println(abilShield2.getSpecialItem().getAbil().getDelay());
+                abilShield2.getSpecialItem().getAbil().setDelay(abilShield2.getSpecialItem().getAbil().getDelay()+1);
+                g.drawString(String.valueOf((int)((abilCountDown-abilShield2.getSpecialItem().getAbil().getDelay())/100)), 64, 75);
+
+                if (abilShield2.getSpecialItem().getAbil().getDelay() == abilCountDown)
+                {
+                    abilShield2.getSpecialItem().getAbil().setDelay(0);
+                    abilShield2.getSpecialItem().getAbil().setOffCooldown(true);
+                    abilActive = false;
+                }
+
+            }
+
+            
+        }
+
+        if (abilBooShield3 && abilActive)
+        {
+            g.drawImage(abilShield3Img, 16, 45, 40, 40, null);
+            if (abilShield3.getSpecialItem().getAbil().getOffCooldown())
+            {
+                immunity = true;
+                abilShield3.getSpecialItem().getAbil().setOffCooldown(false);
+            }
+
+
+
+            if (abilShield3.getSpecialItem().getAbil().getOffCooldown() == false && finishedAbil == false)
+            {
+                abilShield3.getSpecialItem().getAbil().setDelay(abilShield3.getSpecialItem().getAbil().getDelay()+1);
+                if (abilShield3.getSpecialItem().getAbil().getDelay() < abilShield3.getSpecialItem().getAbil().getUsageTime())
+                {
+                    g.drawImage(abilShield3Img, soldier.getX()-soldier.getWidth()-40, soldier.getY()-soldier.getHeight()/2-40, 200, 200, null);
+                    g.drawString(String.valueOf((int)((abilShield3.getSpecialItem().getAbil().getUsageTime()-abilShield3.getSpecialItem().getAbil().getDelay())/100)), 64, 75);
+                }
+                else
+                {
+                    finishedAbil = true;
+                    abilShield3.getSpecialItem().getAbil().setDelay(0);
+                    immunity = false;
+                }
+            }
+
+
+
+
+
+            if (abilShield3.getSpecialItem().getAbil().getOffCooldown() == false && finishedAbil)
+            {
+                abilShield3.getSpecialItem().getAbil().setDelay(abilShield3.getSpecialItem().getAbil().getDelay()+1);
+                g.drawString(String.valueOf((int)((abilCountDown-abilShield3.getSpecialItem().getAbil().getDelay())/100)), 64, 75);
+
+                if (abilShield3.getSpecialItem().getAbil().getDelay() == abilCountDown)
+                {
+                    abilShield3.getSpecialItem().getAbil().setDelay(0);
+                    abilShield3.getSpecialItem().getAbil().setOffCooldown(true);
+                    abilActive = false;
+                }
+
+            }
+
+            
+        }
+
+
+        if (abilBooPoints1 && start)
+        {
+            g.drawImage(abilPoints1Img, 16, 45, 40, 40, null);
+        }
+
+        if (abilBooPoints2 && start)
+        {
+            g.drawImage(abilPoints2Img, 16, 45, 40, 40, null);
+        }
+
+        if (abilBooPoints3 && start)
+        {
+            g.drawImage(abilPoints3Img, 16, 45, 40, 40, null);
+        }
+
 
     }
 
 
-    @Override
-    public void keyReleased(KeyEvent e) 
+
+
+
+
+
+
+
+
+
+
+
+    public void initializeItems(Graphics g)
     {
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_LEFT)
+        if (shop.getStoreType() == 0 && openShop)
         {
-            keyHeld.remove(e.getKeyCode());
+            for (Item[] abils : shop.getAbilities())
+            {
+                for (Item abil : abils)
+                {
+                    if (abil != null)
+                    {
+                    g.drawImage(abil.getImg(), abil.getX()+18, abil.getY()+12, abil.getWidth(), abil.getHeight(), null);
+                    }
+                }
+            }
+        }
+        else if (openShop)
+        {
+            for (Item[] skins : shop.getSkins())
+            {
+                for (Item skin : skins)
+                {
+                    if (skin != null)
+                    {
+                    g.drawImage(skin.getImg(), skin.getX()+18, skin.getY()+12, skin.getWidth(), skin.getHeight(), null);
+                    }
+                }
+            }
         }
     }
 
 
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == playBtn)
-        {
-            
-        }
 
-        if (e.getSource() == howToPlayBtn)
-        {
-            
-        }
 
-        if (e.getSource() == returnHomeBtn)
-        {
-            
-        }
 
-        if (e.getSource() == quitBtn)
-        {
-            
-        }
 
-        if (e.getSource() == playAgainBtn)
-        {
-            
-        }
-
-        
-        
-        
-        move();
-        repaint();
-        if (health <= 0)
-        {
-            creds += score*difficultyCredsMultiplier;
-            placeMissileTimer.stop();
-            placePlaneTimer.stop();
-            newBarrageTimer.stop();
-            gameLoop.stop();
-        }
-    }
 
 
 
