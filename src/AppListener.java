@@ -287,6 +287,7 @@ public class AppListener implements ActionListener, KeyListener {
 
         if (e.getSource() == paraSlider.playBtn)
         {
+            //paraSlide.JComp.setVisible(true);
             paraSlider.loadGame.setVisible(false);
             paraSlider.saveGame.setVisible(false);
             paraSlider.credits.setVisible(false);
@@ -339,6 +340,7 @@ public class AppListener implements ActionListener, KeyListener {
 
         if (e.getSource() == paraSlider.returnHomeBtn)
         {
+            paraSlider.JComp.setVisible(false);
             paraSlider.loadGame.setVisible(true);
             paraSlider.saveGame.setVisible(true);
             paraSlider.credits.setVisible(true);

@@ -14,6 +14,11 @@ import javax.swing.*;
 public class ParachuteSlider extends JPanel //implements ActionListener, KeyListener
 {
 
+    //fix fonts
+    //add box around items in shop
+    // play btn swap quit btn
+
+
 
 
     //three tiers for abilties 
@@ -100,7 +105,9 @@ public class ParachuteSlider extends JPanel //implements ActionListener, KeyList
     //int chanceExplosion = 20; //out of 1000 per tick;
     int explosionLifeTime = 20;
     //1900
+    //1900
     int missileDelay = 1900;
+    //0.8
     double missileDifficultyGain = 0.8;
 
 
@@ -229,6 +236,7 @@ public class ParachuteSlider extends JPanel //implements ActionListener, KeyList
      JButton shopCloseBtn;
      JButton switchShopBtn;
      JTextPane shopType;
+     JTextPane JComp;
 
     //shop
      Shop shop;
@@ -532,7 +540,7 @@ public class ParachuteSlider extends JPanel //implements ActionListener, KeyList
         //play button
         playBtn = new JButton("Play");
         playBtn.addActionListener(new AppListener(this, this));
-        playBtn.setBounds(boardWidth - 405-5, boardHeight -50 , 180, 40);
+        playBtn.setBounds(boardWidth - 410, boardHeight -120, 180, 35);
         playBtn.setFocusable(false);
         add(playBtn);
         
@@ -548,10 +556,13 @@ public class ParachuteSlider extends JPanel //implements ActionListener, KeyList
         //quit button
         quitBtn = new JButton("Quit");
         quitBtn.addActionListener(new AppListener(this, this));
-        quitBtn.setBounds(boardWidth - 357, boardHeight-120 , 75, 35);
+        quitBtn.setBounds(boardWidth - 405-5, boardHeight -50 , 180, 35);
         quitBtn.setFocusable(false);
         add(quitBtn);
-        
+        //boardWidth - 405-5, boardHeight -50 , 180, 40
+        //boardWidth - 357, boardHeight-120 , 75, 35
+        //boardWidth - 410, boardHeight -120, 180, 40
+
         //play again button
         playAgainBtn = new JButton("Play Again");
         playAgainBtn.addActionListener(new AppListener(this, this));
@@ -563,7 +574,7 @@ public class ParachuteSlider extends JPanel //implements ActionListener, KeyList
         //shop open button
         shopOpenBtn = new JButton("Shop");
         shopOpenBtn.addActionListener(new AppListener(this, this));   //110
-        shopOpenBtn.setBounds(boardWidth - 393, boardHeight - 85, 145, 35);
+        shopOpenBtn.setBounds(boardWidth - 410, boardHeight - 85, 180, 35);
         shopOpenBtn.setFocusable(false);
         add(shopOpenBtn);
 
@@ -620,14 +631,14 @@ public class ParachuteSlider extends JPanel //implements ActionListener, KeyList
 
         credits = new JTextPane();
         credits.setText("Credits: "+creds);
-        credits.setBackground(Color.GRAY);
+        credits.setBackground(Color.LIGHT_GRAY);
         credits.setForeground(Color.BLACK);
         credits.setBounds(statsX, statsY, statsWidth, statsHeight);
         add(credits);
 
         highestScore = new JTextPane();
         highestScore.setText("High Score: "+PD.getHighScore());
-        highestScore.setBackground(Color.GRAY);
+        highestScore.setBackground(Color.LIGHT_GRAY);
         highestScore.setForeground(Color.BLACK);
         highestScore.setBounds(statsX, statsY + 30, statsWidth, statsHeight);
         add(highestScore);
@@ -778,6 +789,14 @@ public class ParachuteSlider extends JPanel //implements ActionListener, KeyList
         shop.getSkins()[2][5] = skyHell;
 
 
+        JComp = new JTextPane();
+        JComp.setText("");
+        JComp.setBackground(Color.WHITE);
+        JComp.setForeground(Color.BLACK);
+        JComp.setBounds(0, 0, 640, 80);
+        JComp.setFocusable(false);
+        add(JComp);
+        JComp.setVisible(false);
 
         for (int i = 0; i < storeLengthY; i++)
         {
