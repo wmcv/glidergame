@@ -1,6 +1,6 @@
 # ParaGliders
 
-[Watch the ParaGliders gameplay video](https://github.com/user-attachments/assets/666fe331-587f-4aa2-93ea-44a37d3fb27d)
+[Watch the ParaGliders gameplay video](https://github.com/user-attachments/assets/29d42061-3d85-4f2a-8ff8-d55f43d0dbb7)
 
 ParaGliders is an interactive 2D game developed using Java.
 
