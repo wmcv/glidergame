@@ -1,6 +1,6 @@
 # ParaGliders
 
-<img src="https://github.com/user-attachments/assets/978ca143-f63e-45b0-8bc0-4b37bd909d22" alt="glidergame" title="ParaGliders" />
+https://github.com/user-attachments/assets/666fe331-587f-4aa2-93ea-44a37d3fb27d
 <br />
 <br />
 
